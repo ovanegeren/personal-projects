@@ -1,11 +1,17 @@
 from os import remove
 from spellchecker import SpellChecker
 import tweepy
+import json
 import re
 
 #Must use Twitter API v2. Can only search for recent tweets
+permissions_path = '/Users/oscarvanegeren/personal_projects/permissions.json'
+with open(permissions_path, 'r') as f:
+    account = json.load(f)
+    bearer_token = account["Bearer-Token"]
+f.close()
 
-client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAAOaXdwEAAAAAwaMI%2FfBpgrPs6EYXSLR6cvN2%2BSk%3D1L7lkRwGSnn7w2yxwsGPpwMzaZT9ynOBZbs52l8Q11P7uUCErY")
+client = tweepy.Client(bearer_token=bearer_token)
 spell = SpellChecker()
 
 def clean_tweet(text):

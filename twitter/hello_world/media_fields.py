@@ -1,8 +1,13 @@
 import tweepy
+import json
 
 #Must use Twitter API v2. Can only search for recent tweets
 
-client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAAOaXdwEAAAAAwaMI%2FfBpgrPs6EYXSLR6cvN2%2BSk%3D1L7lkRwGSnn7w2yxwsGPpwMzaZT9ynOBZbs52l8Q11P7uUCErY")
+with open('/Users/oscarvanegeren/personal_projects/permissions.json', 'r') as f:
+    account = json.load(f)
+    bearer_token = account["Bearer-Token"]
+f.close()
+client = tweepy.Client(bearer_token=bearer_token)
 
 # Replace with your own search query
 # query = 'covid -is:retweet has:media'
