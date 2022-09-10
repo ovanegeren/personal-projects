@@ -7,28 +7,42 @@ from pynput.keyboard import Key, Listener
 
 class Slider:
     def __init__(self):
+        # variables related to game structure and generation
         self.pop = None
+        self.win_condition = None
         self.gamestate = None
         self.width = 3
         self.height = 3
+
+        # row/column position of cursor (note: when accessing gamestate use format [row][col] due to how gamestate is formatted)
         self.row_pos = None
         self.col_pos = None
+
+        # variables containng game stats
         self.win = False
+        self.game_over = False
         self.moves = 0
         self.generate_gamestate()
         self.getpos()
+        self.generate_board()
 
     def generate_gamestate(self):
         self.pop = list(range(1, self.width * self.height))
         self.pop.append('*')
+        self.win_condition = self.format_pop()               # easier to store game winning condition on initialization than sorting a mixed type list later
+        print(self.win_condition)
         random.shuffle(self.pop)
-        self.gamestate = []
+        print(self.win_condition)
+        self.gamestate = self.format_pop()
+        print(self.gamestate)
+
+    def format_pop(self):                       # created a function thats formats self.pop into a list because i need to do it twice
+        out = []
         for row in range(self.height):
             i = row*self.width
             val = self.pop[i:(i+self.width)]
-            self.gamestate.append(val)
-            
-        print(self.gamestate)
+            out.append(val)
+        return out
 
     def generate_board(self):
         print("")
@@ -80,7 +94,7 @@ class Slider:
         moved = False
         match input:
             case Key.esc:
-                return False
+                self.game_over = True
             case Key.up:
                 moved = self.moveup()
             case Key.down:
@@ -91,7 +105,6 @@ class Slider:
                 moved = self.moveright()
         if moved:
             self.moves += 1
-        return True
             
 
     def checkrange(self, num, type=None):
@@ -103,7 +116,12 @@ class Slider:
             raise ValueError("type must be 'width', 'w', 'height', or 'h'")
 
     def checkwin(self):
-        pass 
+        if self.gamestate == self.win_condition:
+            self.win = True
+            self.game_over = True
+            return True
+        else:
+            return False
 
     def getpos(self):
         for row in range(self.height):
@@ -113,20 +131,23 @@ class Slider:
                     self.col_pos = col
 
     def gameloop(self, input):
-        if input != None:
-            ret = self.handle_keypress(input)
+        self.handle_keypress(input)
         self.generate_board()
         self.checkwin()
-        return ret
+        print(self.win_condition)
+        print(self.gamestate)
+        return not self.game_over               # Return True (ie. "keep listening to keyboard") as long as game is not over               
 
 
 c = Slider()
 with Listener(on_press=c.gameloop) as listener:
-    listener.join()
-    while c.win != True:
-        pass
-    
-    listener.stop()
+    listener.join()         # listener is blocking, must be ended through c.gameloop
+
+    # check for victory upon completion of a game
+    if c.win:
+        print("You won! You finished in ", c.moves, " moves.")
+    else:
+        print("Game Over.")
 
 
 
