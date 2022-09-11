@@ -3,13 +3,13 @@ from pynput.keyboard import Key, Listener
 
 
 class Slider:
-    def __init__(self):
+    def __init__(self, width, height):
         # variables related to game structure and generation
         self.pop = None
         self.win_condition = None
         self.gamestate = None
-        self.width = 4
-        self.height = 4
+        self.width = width
+        self.height = height
 
         # row/column position of cursor (note: when accessing gamestate use format [row][col] due to how gamestate is formatted)
         self.row_pos = None
@@ -149,32 +149,23 @@ class Slider:
         return not self.game_over               # Return True (ie. "keep listening to keyboard") as long as game is not over               
 
     def start_game(self):
-        #TODO: Research - what happens if I create multiple listeners? (ie. create 2 game classes, and call 'start_game' for each?)
         #TODO: write class function that starts a game, implements the listeer automatically
-        pass
+        with Listener(on_press=c.gameloop) as listener:
+            listener.join()         # listener is blocking, must be ended through c.gameloop
+
 
 
 
 if __name__ == "__main__":
-    c = Slider()
-    with Listener(on_press=c.gameloop) as listener:
-        listener.join()         # listener is blocking, must be ended through c.gameloop
-
+    c = Slider(4,4)
+    # with Listener(on_press=c.gameloop) as listener:
+    #     listener.join()         # listener is blocking, must be ended through c.gameloop
+    c.start_game()
         # check for victory upon completion of a game
-        if c.win:
-            print("You won! You finished in ", c.moves, " moves.")
-        else:
-            print("Game Over.")
+    if c.win:
+        print("You won! You finished in ", c.moves, " moves.")
+    else:
+        print("Game Over.")
 
 
 
-
-
-#     c.scan_input()
-
-# print(c.row_pos, c.col_pos)
-# c.generate_board()
-# c.moveleft()
-# print()
-# print(c.row_pos, c.col_pos)
-# c.generate_board()
