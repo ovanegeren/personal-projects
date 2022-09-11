@@ -11,8 +11,8 @@ class Slider:
         self.pop = None
         self.win_condition = None
         self.gamestate = None
-        self.width = 3
-        self.height = 3
+        self.width = 4
+        self.height = 4
 
         # row/column position of cursor (note: when accessing gamestate use format [row][col] due to how gamestate is formatted)
         self.row_pos = None
@@ -49,7 +49,14 @@ class Slider:
         for row in range(self.height):
             row_str = ""
             for col in range(self.width):
-                row_str += " | " + str(self.gamestate[row][col])
+                num = self.gamestate[row][col]
+                row_str += " | " + str(num)
+                try:                            # will always throw type error for '*' character
+                    if (num <= 9 ) and ((self.width * self.height - 1) > 9): 
+                        row_str += " "
+                except TypeError:
+                    if ((self.width * self.height - 1) > 9):
+                        row_str += " "
             row_str += " | "
             print(row_str)
     
@@ -90,6 +97,10 @@ class Slider:
             self.gamestate[self.row_pos][self.col_pos] = num
             self.col_pos = col
 
+    def cheat(self):
+        self.game_over = True
+        self.win = True
+
     def handle_keypress(self, input):
         moved = False
         match input:
@@ -103,14 +114,18 @@ class Slider:
                 moved = self.moveleft()
             case Key.right:
                 moved = self.moveright()
+            case Key.caps_lock:
+                print("Cheater!")
+                self.cheat()
+
         if moved:
             self.moves += 1
             
 
     def checkrange(self, num, type=None):
-        if type == 'width' or type == 'w':
+        if (type == 'width') or (type == 'w'):
             return num >= 0 and num < self.width
-        elif type == 'height' or type == 'h':
+        elif (type == 'height') or (type == 'h'):
             return num >= 0 and num < self.width
         else:
             raise ValueError("type must be 'width', 'w', 'height', or 'h'")
@@ -134,8 +149,8 @@ class Slider:
         self.handle_keypress(input)
         self.generate_board()
         self.checkwin()
-        print(self.win_condition)
-        print(self.gamestate)
+        # print(self.win_condition)
+        # print(self.gamestate)
         return not self.game_over               # Return True (ie. "keep listening to keyboard") as long as game is not over               
 
 
