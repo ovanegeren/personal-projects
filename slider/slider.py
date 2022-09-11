@@ -1,8 +1,5 @@
 import random
-# from shutil import move
 from pynput.keyboard import Key, Listener
-# from sqlite3 import Row
-# from tkinter import N
 
 
 class Slider:
@@ -60,7 +57,6 @@ class Slider:
             row_str += " | "
             print(row_str)
     
-
     def moveup(self):
         row = self.row_pos - 1
         if self.checkrange(row, 'h'):
@@ -121,7 +117,6 @@ class Slider:
         if moved:
             self.moves += 1
             
-
     def checkrange(self, num, type=None):
         if (type == 'width') or (type == 'w'):
             return num >= 0 and num < self.width
@@ -153,16 +148,23 @@ class Slider:
         # print(self.gamestate)
         return not self.game_over               # Return True (ie. "keep listening to keyboard") as long as game is not over               
 
+    def start_game(self):
+        #TODO: Research - what happens if I create multiple listeners? (ie. create 2 game classes, and call 'start_game' for each?)
+        #TODO: write class function that starts a game, implements the listeer automatically
+        pass
 
-c = Slider()
-with Listener(on_press=c.gameloop) as listener:
-    listener.join()         # listener is blocking, must be ended through c.gameloop
 
-    # check for victory upon completion of a game
-    if c.win:
-        print("You won! You finished in ", c.moves, " moves.")
-    else:
-        print("Game Over.")
+
+if __name__ == "__main__":
+    c = Slider()
+    with Listener(on_press=c.gameloop) as listener:
+        listener.join()         # listener is blocking, must be ended through c.gameloop
+
+        # check for victory upon completion of a game
+        if c.win:
+            print("You won! You finished in ", c.moves, " moves.")
+        else:
+            print("Game Over.")
 
 
 
