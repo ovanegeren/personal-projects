@@ -3,3 +3,5 @@
 keys.txt
 permissions.json
 **/sandbox.py
+slider/sliderenv/
+twiter/twiterenv/

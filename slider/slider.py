@@ -1,3 +1,4 @@
+import sys
 import random
 from pynput.keyboard import Key, Listener
 
@@ -27,11 +28,10 @@ class Slider:
         self.pop = list(range(1, self.width * self.height))
         self.pop.append('*')
         self.win_condition = self.format_pop()               # easier to store game winning condition on initialization than sorting a mixed type list later
-        print(self.win_condition)
         random.shuffle(self.pop)
-        print(self.win_condition)
+        print("Win Condition: ", self.win_condition)
         self.gamestate = self.format_pop()
-        print(self.gamestate)
+        print("Generated Gamestate: ", self.gamestate)
 
     def format_pop(self):                       # created a function thats formats self.pop into a list because i need to do it twice
         out = []
@@ -94,6 +94,7 @@ class Slider:
             self.col_pos = col
 
     def cheat(self):
+        self.gamestate = self.win_condition
         self.game_over = True
         self.win = True
 
@@ -129,7 +130,7 @@ class Slider:
         if self.gamestate == self.win_condition:
             self.win = True
             self.game_over = True
-            return True
+            return True             
         else:
             return False
 
@@ -157,7 +158,14 @@ class Slider:
 
 
 if __name__ == "__main__":
-    c = Slider(4,4)
+    try:
+        width = int(input("Enter the number of columns (width) of your slider puzzle: "))
+        height = int(input("Enter the number of rows (height) in your slider puzzle: "))
+    except ValueError:
+        print("Error: width and height must be integers. Exiting.")
+        sys.exit()
+
+    c = Slider(width,height)
     # with Listener(on_press=c.gameloop) as listener:
     #     listener.join()         # listener is blocking, must be ended through c.gameloop
     c.start_game()
