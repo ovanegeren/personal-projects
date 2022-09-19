@@ -79,7 +79,7 @@ class Slider:
 
     def moveleft(self):
         col = self.col_pos - 1
-        if self.checkrange(col, 'h'):
+        if self.checkrange(col, 'w'):
             num = self.gamestate[self.row_pos][col]
             self.gamestate[self.row_pos][col] = self.gamestate[self.row_pos][self.col_pos]
             self.gamestate[self.row_pos][self.col_pos] = num
@@ -87,7 +87,7 @@ class Slider:
 
     def moveright(self):
         col = self.col_pos + 1
-        if self.checkrange(col, 'h'):
+        if self.checkrange(col, 'w'):
             num = self.gamestate[self.row_pos][col]
             self.gamestate[self.row_pos][col] = self.gamestate[self.row_pos][self.col_pos]
             self.gamestate[self.row_pos][self.col_pos] = num
@@ -122,7 +122,7 @@ class Slider:
         if (type == 'width') or (type == 'w'):
             return num >= 0 and num < self.width
         elif (type == 'height') or (type == 'h'):
-            return num >= 0 and num < self.width
+            return num >= 0 and num < self.height
         else:
             raise ValueError("type must be 'width', 'w', 'height', or 'h'")
 
