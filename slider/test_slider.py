@@ -32,17 +32,22 @@ class SliderTestSuite(unittest.TestCase):
         pass
 
     def test_handle_keypress(self):
-        
         ### Test that tha keyboard input callback function correctly handles inputs
         pass
 
     def test_check_win(self):
         ### Test that game correctly checks for win condition (and that the win condition is correctly generated)
-        ### assumption: a randomly generated game will not result in a win
+        ### assumption: a randomly generated game will not result in a win (unreliable at lower size games)
         self.s.generate_gamestate()
         self.s.get_pos()
         self.assertFalse(self.s.checkwin())
-        
+
+        self.s.cheat()              # cheating to set gamestate to copy of win condition
+        self.s.get_pos()
+        ### in a 'win', the cursor should always be in the bottom right corner
+        self.assertEqual(self.s.pos_row, self.s.height -1)
+        self.assertEqual(self.s.pos_col, self.s.width -1)
+
         pass
 
 

@@ -94,7 +94,7 @@ class Slider:
             self.col_pos = col
 
     def cheat(self):
-        self.gamestate = self.win_condition
+        self.gamestate = self.win_condition.copy()
         self.game_over = True
         self.win = True
 
