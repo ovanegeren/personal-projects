@@ -2,6 +2,9 @@
 .vscode
 keys.txt
 permissions.json
+*.lock
+
+__pycache__/
 **/sandbox.py
 slider/sliderenv/
 twiter/twiterenv/
