@@ -68,7 +68,16 @@ def append(link, value):
     >>> link.tolist()
     [1, 2, 3, 4]
     """
-    pass  # YOUR ANSWER HERE
+    # YOUR ANSWER HERE
+    '''
+    Algorithm: find the current last element in the linked list by following links, and add an additional link to append the given value
+
+    Complexity
+        runtime: o(n), we need to search the existing list to find the last element
+        memory: o(n), assuming the list input length n counts towards memory, program memory is o(n) as we need to store the list
+            - false assumption: 'additional' storage is constant, therefore o(1)
+    '''
+
 
 
 def insert(link, i, value):
