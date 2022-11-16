@@ -3,6 +3,7 @@
 keys.txt
 permissions.json
 *.lock
+a.out 
 
 __pycache__/
 **/sandbox.py

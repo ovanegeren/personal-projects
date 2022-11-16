@@ -4,6 +4,8 @@ by Alvin Wan
 
 Take the course at https://skl.sh/
 Find all course resources at https://alvinwan.com/datastructures101
+
+RUN USING COMMAND: "python -m doctest main.py"
 """
 
 
@@ -68,7 +70,7 @@ def append(link, value):
     >>> link.tolist()
     [1, 2, 3, 4]
     """
-    # YOUR ANSWER HERE
+    ### YOUR ANSWER HERE
     '''
     Algorithm: find the current last element in the linked list by following links, and add an additional link to append the given value
 
@@ -77,7 +79,11 @@ def append(link, value):
         memory: o(n), assuming the list input length n counts towards memory, program memory is o(n) as we need to store the list
             - false assumption: 'additional' storage is constant, therefore o(1)
     '''
-
+    current_link = link
+    ins = Link(value)
+    while current_link.next is not None:
+        current_link = current_link.next
+    current_link.next = ins
 
 
 def insert(link, i, value):
@@ -88,7 +94,34 @@ def insert(link, i, value):
     >>> link.tolist()
     [1, 4, 2, 3]
     """
-    pass  # YOUR ANSWER HERE
+    ### YOUR ANSWER HERE
+    '''
+    Algorithm: traverse the linked list going from the start to list index i. 
+    Upon getting there, instert a link copying over the link.next elment into the insert.
+    Once copied, replace the link.next of the current element with the new insert-link
+
+    Complexity
+        runtime: O(n), as we have to progress through each link in the list to get to our desired point
+        memory: O(1), as we are inserting a single, constant size element
+    '''
+    ### ORIGINAL ATTEMPT
+    # ind = 0
+    # current = link
+    # ins = Link(value)
+    # while (ind < i) and (current.next is not None):
+    #     i += 1
+    #     current = current.next
+    
+    # ins.next = current.next
+    # current.next = ins
+
+    ### SOLUTION - similar to attempt, but can insert easier using class declaration
+    ind = 0
+    current = link
+    while (ind < i) and (current.next is not None):
+        i += 1
+        current = current.next
+    current.next = Link(value, current.next)            #easier insertion
 
 
 class StackViaLinkedList:
@@ -105,14 +138,34 @@ class StackViaLinkedList:
     >>> stack.pop()
     2
     """
+    '''
+    ALGORITHM: create a linked list where the first element is the top of the stack.
+            When pushing to the stack, create a new 'first' element in the linked list.
+            When popping the stack, remove the first element from the list (ie. make the second element the new first element in the list)
+    FALSE. Solution: similar idea to the original answer, but the top of the stack should be the end of the linked list (see example)
+
+    Complexity:
+        Runtime: O(n), as we have to navigate the entire linked list every time we want to add / pop a single element
+        Memory: O(1), as we are only adding or popping a single, constant size element at a time
+    '''
     def __init__(self, link):
         self.link = link
 
     def push(self, value):
-        pass  # YOUR ANSWER HERE
+        # YOUR ANSWER HERE
+        current = self.link
+        while current.next is not None:
+            current = current.next
+        current.next = Link(value)
 
     def pop(self):
-        pass  # YOUR ANSWER HERE
+        # YOUR ANSWER HERE
+        current = self.link
+        while current.next.next is not None:
+            current = current.next
+        value = current.next.value
+        current.next = None
+        return value
 
 
 def remove_cycle(link):
@@ -128,11 +181,53 @@ def remove_cycle(link):
     >>> link.next.next.next is None
     True
     """
-    pass  # YOUR ANSWER HERE
+    # YOUR ANSWER HERE
+    '''
+    Algorithm: Because we assume there are no repeated values in the list, finding a repeated value indicates a list cycle. 
+        (we could otherwise serach for a cycle by inspecting link addresses)
+        Cycle through linked list comparing current value to second linked list containing all previous values. 
+        If the current link we are inspecting has no previous instances, add the value to the list of previous values.
+        If the current link does have a previous instance, remove it's future address to break the cycle.
+
+    Complexity:
+        Runtime complexity is O(n^2), we need to perform an O(n) operation on each link in the list to search for previous values
+        Memory complexity is O(n), as we will need to store a list of previous values up to n links.
+    FALSE: solution can be achieved with O(n) runtime complexity (???)
+        NOTE: makes sense now, as set() searches in constant time (which might have been useful for a datastructures course...)
+    '''
+    # # ORIGINAL ATTEMPT
+    # # Not sure how I can achieve this in O(n) runtime complexity (without hashmaps), so I will do it the only way I know
+    # prev = Link(link.value)
+    # prev_head = prev.copy()
+    # while link.next is not None:
+    #     while prev.next is not None:
+    #         if prev.value == link.value:
+    #             # if repeat detected, unlink cycle
+    #             return
+    #         else:
+    #             prev = prev.next # iterate through all values in the list of prevous
+    #     prev.next = Link(link.value)
+    #     #restart linked list ??
+    #     link = link.next    # iterate through all values in the main list        
+    #     # if no repeat detected add value to link of prevous values
+    # # ATTEMPT FAILED: not sure how to return ot the head of the linked list, as the class is mutable
+    # SOLUTION: Uses set() data structure (which is bullshit - he never mentioned this in the entire course)
+    seen = set()
+    while link.next:
+        if link.next.value in seen:         # if the next value has already been seen, break the cycle
+            link.next = None
+            break                           # assumes only 1 cycle per list 
+        seen.add(link.value)
+        link = link.next
+    # TODO: research set type in Python
+            
+
+
 
 
 class File:
     """
+    NOTE: purely conceptual exercise, solution exists, exercise not designed to be attempted but discussed algorithmically
     Create a file object that can efficiently merge with other files.
 
     There are several possible solutions:
@@ -157,6 +252,9 @@ class File:
     >>> c.link.tolist()
     ['hehe', 'haha']
     """
+    '''
+    Algorithm: 
+    '''
     def __init__(self, lines=()):
         pass  # YOUR ANSWER HERE
 
@@ -176,7 +274,29 @@ def is_palindrome_link(link):
     >>> is_palindrome_link(raceca)
     False
     """
-    pass  # YOUR ANSWER HERE
+    '''
+    ALGORITHM: the word is stored as a linked list. Combining this with a stack and queue.
+        Go through the linked list, adding each letter to both a stack AND a queue.
+        After this, pop a letter from the stack, and compare it to the letter taken from the queue.
+        This compares first to last
+    COMPLEXITY:
+        runtime complexity is  O(2n), as O(n) operation required to collect letters from linked list, 
+            and O(n) operation required to compare the stack / queue
+        memory complexity is O(2n), as both a stack and a queue of size n are required for comparison
+    '''
+    # YOUR ANSWER HERE
+    stack = Stack()
+    queue = Queue()
+    while link is not None:
+        stack.push(link.value)
+        queue.enqueue(link.value)
+        link = link.next
+
+    # stack and queue should always be same length, so either are useable
+    while len(stack):       # len(stack) returns iterable of size stack? FALSE: lenght decreases as we pop from stack, reducing length to 0 
+        if stack.pop() != queue.dequeue():
+            return False
+    return True
 
 
 #########
